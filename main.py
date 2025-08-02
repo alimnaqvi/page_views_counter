@@ -45,7 +45,7 @@ async def add_view_to_db(request: Request):
 
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO page_views (timestamp, user_agent, ip_address) VALUES (?, ?, ?)",
+                    "INSERT INTO page_views (timestamp, user_agent, ip_address) VALUES (%s, %s, %s)",
                     (timestamp, user_agent, ip_address)
                 )
                 conn.commit()
@@ -74,3 +74,7 @@ async def add_view_to_db(request: Request):
 #     """ A simple root endpoint to confirm the server is running. """
 #     return {"message": "Hello! The view counting server is running."}
 
+# Add a root endpoint for basic health checks
+@app.get("/")
+def read_root():
+    return {"status": "ok"}

@@ -22,7 +22,7 @@ try:
             # Using TEXT for timestamp to store in ISO 8601 format.
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS page_views (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id SERIAL PRIMARY KEY,
                     timestamp TEXT NOT NULL,
                     user_agent TEXT,
                     ip_address TEXT
