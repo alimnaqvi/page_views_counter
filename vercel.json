@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python3 init_db.py",
+  "buildCommand": "python init_db.py",
   "devCommand": "uvicorn main:app --reload",
   "framework": null
 }
