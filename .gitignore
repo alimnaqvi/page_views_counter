@@ -1,0 +1,9 @@
+venv
+.env
+test*
+rough
+.vscode
+__pycache_
+*.pyc
+views.db
+error_logs.csv
