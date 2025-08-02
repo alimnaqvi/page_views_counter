@@ -1,5 +1,5 @@
-# import sqlite3
-# import argparse
+import sqlite3
+import argparse
 import psycopg2
 import sys
 import os
