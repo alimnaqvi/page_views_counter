@@ -1,12 +1,21 @@
-import sqlite3
 import argparse
 import psycopg2
-import sys
+# import sys
 import os
 from dotenv import load_dotenv
 
-if len(sys.argv) > 1:
-    CONN_STRING = sys.argv[1]
+parser = argparse.ArgumentParser(description="Show 10 entries from each table in a PostgreSQL database.")
+
+parser.add_argument(
+    "--url",
+    help="Connection string for PostgreSQL database.\n\
+    Example=\"postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require&channel_binding=require\""
+)
+
+args = parser.parse_args()
+
+if args.url is not None:
+    CONN_STRING = args.url
 else:
     print("No argument provided. Looking for environment variable named 'DATABASE_URL'")
     load_dotenv()
@@ -19,6 +28,21 @@ else:
               "Example=\"postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require&channel_binding=require\"",
               sep="\n")
         exit(1)
+
+# if len(sys.argv) > 1:
+#     CONN_STRING = sys.argv[1]
+# else:
+#     print("No argument provided. Looking for environment variable named 'DATABASE_URL'")
+#     load_dotenv()
+#     try:
+#         CONN_STRING = os.environ["DATABASE_URL"]
+#     except Exception as e:
+#         print(f"Error retrieving environment variable: {e}")
+#         print("Please provide the connection string for PostgreSQL database, "
+#               "either as an argument to this script, or as an environment variable (.env will work)",
+#               "Example=\"postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require&channel_binding=require\"",
+#               sep="\n")
+#         exit(1)
 
 # parser = argparse.ArgumentParser(description="Show 10 entries from each table in a PostgreSQL database.")
 # parser.add_argument(
