@@ -1,16 +1,16 @@
 from dotenv import load_dotenv
 import os
 import psycopg2
-import sys
+import argparse
 
-if len(sys.argv) > 1:
-    if sys.argv[1] == "drop":
-        DROP_TABLE = True
-    else:
-        print(f"Unknown argument: {sys.argv[1]}", "The only allowed argument is 'drop'", file=sys.stderr, sep='\n')
-        exit(1)
-else:
-    DROP_TABLE = False
+parser = argparse.ArgumentParser(
+    description="Creates a PostgreSQL table (URL taken from .env) if it did not exist."
+    "Does not modify the table if it existed, unless --drop option is specified."
+)
+
+parser.add_argument("-d", "--drop", action="store_true", help="Drop/delete a table if it exists in the database.")
+
+args = parser.parse_args()
 
 load_dotenv()
 try:
@@ -26,7 +26,7 @@ try:
         # Open a cursor to perform database operations
         with conn.cursor() as cursor:
             # Drop the table if it already exists and 'drop' argument is provided
-            if DROP_TABLE:
+            if args.drop:
                 cursor.execute("DROP TABLE IF EXISTS page_views;")
                 print("Dropped table page_views (if it existed).")
 

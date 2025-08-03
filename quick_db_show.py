@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 parser = argparse.ArgumentParser(description="Show 10 entries from each table in a PostgreSQL database.")
 
 parser.add_argument(
-    "--url",
+    "-u", "--url",
     help="Connection string for PostgreSQL database.\n\
     Example=\"postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require&channel_binding=require\""
 )
