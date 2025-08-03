@@ -1,4 +1,3 @@
-# import sqlite3
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, Request
@@ -13,8 +12,6 @@ load_dotenv()
 
 # Path to the database and the log file
 try:
-    # DB_PATH = os.environ["DB_PATH"]
-    # LOG_FILE = os.environ["LOG_FILE"]
     CONN_STRING = os.environ["DATABASE_URL"]
 except Exception as e:
     print(f"Error getting variable from the environment: {e}.", file=sys.stderr)
@@ -51,19 +48,8 @@ async def add_view_to_db(request: Request):
                 conn.commit()
                 print("Successfully written to database.")
 
-        # # Delete below
-        # conn = sqlite3.connect(DB_PATH)
-        # cursor = conn.cursor()
-        # cursor.execute(
-        #     "INSERT INTO page_views (timestamp, user_agent, ip_address) VALUES (?, ?, ?)",
-        #     (timestamp, user_agent, ip_address)
-        # )
-        # conn.commit()
-        # conn.close()
     except Exception as e:
         print(f"Error writing to database: {e}", file=sys.stderr)
-        # with open(LOG_FILE, "a") as f:
-        #     f.write(f"{timestamp},\"Error writing to database: {e}\"\n")
 
     # 4. Return the invisible pixel as a response
     # The media_type tells the browser it's a PNG image.
