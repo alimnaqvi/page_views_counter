@@ -54,7 +54,7 @@ async def get_camo_url_from_github() -> str | None:
             response = await client.get(GITHUB_PROFILE_URL, follow_redirects=True)
             response.raise_for_status()
 
-            soup = BeautifulSoup(response.text, "lxml")
+            soup = BeautifulSoup(response.text, "html.parser")
             # Find the <img> tag with the specific alt text
             img_tag = soup.find("img", alt=IMAGE_ALT_TEXT)
 
