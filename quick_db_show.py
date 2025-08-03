@@ -3,7 +3,7 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-parser = argparse.ArgumentParser(description="Show 10 entries from each table in a PostgreSQL database.")
+parser = argparse.ArgumentParser(description="Show last 10 entries from each table in a PostgreSQL database.")
 
 parser.add_argument(
     "-u", "--url",
@@ -48,7 +48,7 @@ try:
             for table in tables:
                 table_name = table[0]
                 print(f"\n{table_name}:")
-                cursor.execute(f"SELECT * FROM {table_name} LIMIT 10")
+                cursor.execute(f"SELECT * FROM {table_name} ORDER BY id desc LIMIT 10")
                 rows = cursor.fetchall()
                 for row in rows:
                     print(f"  {row}")
