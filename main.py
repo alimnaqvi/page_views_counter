@@ -69,7 +69,7 @@ def read_cache_from_file() -> dict | None:
         return None
 
 def write_cache_to_file(url: str):
-    """Atomically writes the new cache data to the JSON file."""
+    """(Atomically) writes the new cache data to the JSON file."""
 
     camo_url_cache["url"] = url
     camo_url_cache["timestamp"] = datetime.now(timezone.utc)
@@ -85,12 +85,12 @@ def write_cache_to_file(url: str):
 
     cache_file_path = os.path.join(CACHE_DIR, CACHE_FILE_NAME)
     
-    # Atomic write: write to a temp file then rename
-    temp_file_path = cache_file_path + ".tmp"
+    # # Atomic write: write to a temp file then rename
+    # temp_file_path = cache_file_path + ".tmp"
     try:
-        with open(temp_file_path, "w") as f:
+        with open(cache_file_path, "w") as f:
             json.dump(cache_to_write, f)
-        os.rename(temp_file_path, cache_file_path)
+        # os.rename(temp_file_path, cache_file_path)
         print(f"Successfully wrote new cache to {cache_file_path}")
     except Exception as e:
         print(f"Error writing to cache file: {e}", file=sys.stderr)
