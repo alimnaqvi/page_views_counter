@@ -82,6 +82,13 @@ def write_cache_to_file(url: str):
     if not CACHE_DIR:
         print("Cannot write to cache file. CACHE_DIR is not set in the environment.")
         return
+    
+    # Create directory if doesn't exist
+    try:
+        os.makedirs(CACHE_DIR, exist_ok=True) # exist_ok=True prevents errors if it already exists
+    except Exception as e:
+        print(f"Error creating directory {CACHE_DIR}: {e}", file=sys.stderr)
+        return
 
     cache_file_path = os.path.join(CACHE_DIR, CACHE_FILE_NAME)
     
