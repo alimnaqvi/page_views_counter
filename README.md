@@ -40,7 +40,8 @@ Google has [very handy quickstart guides](https://cloud.google.com/run/docs/quic
 4. Keep the build directory as `/` and set the Entrypoint to `uvicorn main:app --host 0.0.0.0 --port $PORT` (leave the "Function target" blank). Click Save.
 5. Most configuration options for the deployment can be left as default.
 6. In "Containers, Volumes, Networking, Security" section withing the "Containers" tab and the "Variables & Secrets" tab within that, set the DATABASE_URL environment variable either directly, or better, as a secret.
-7. Click on "Create". The deployment should now succeed.
+7. (Optional) To make the cache persist through app shutdown, mount a persistent storage volume such as [Google Cloud Storage](https://cloud.google.com/storage) to your container, then add CACHE_DIR environment variable to point to this volume.
+8. Click on "Create". The deployment should now succeed.
 
 ### Full-stack cloud deployment services
 
@@ -89,4 +90,4 @@ Set the DATABASE_URL environment variable and confirm deployment.
 
 For embedding the views counter on GitHub profile, an additional factor to keep in mind is Github's image caching system. After the first visit, the subsequent visitors do not cause Github to send a request to the deployed server, for hours and even days. Github documentation [mentions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls) that `curl -X PURGE https://camo.githubusercontent.com/....` purges the cache and forces every GitHub user to re-request the image.
 
-So I have added a mechanism in this Python app to purge the cache after sending back each response pixel. This is done by using [FastAPI's Background Tasks](https://fastapi.tiangolo.com/tutorial/background-tasks/). For this logic to work, an environment variable GITHUB_PROFILE_URL (and optionally GITHUB_CAMO_URL) must be set. The logic in the Python app automatically gets the GitHub profile page, looks for GitHub camo URL on the page, and sends a PURGE request to clear the cache.
+So I have added a mechanism in this Python app to purge the cache after sending back each response pixel. This is done by using [FastAPI's Background Tasks](https://fastapi.tiangolo.com/tutorial/background-tasks/). For this logic to work, an environment variable GITHUB_PROFILE_URL (and optionally GITHUB_CAMO_URL) must be set. To make the cache persist through app shutdown, CACHE_DIR environment variable must be set so that cache file can be saved in that directory. The logic in the Python app automatically gets the GitHub profile page, looks for GitHub camo URL on the page, and sends a PURGE request to clear the cache.

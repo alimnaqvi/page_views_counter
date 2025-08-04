@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 import os
 import sys
-import psycopg2
+from psycopg2 import pool
 import httpx
 from bs4 import BeautifulSoup
 import json
@@ -16,7 +16,18 @@ try:
     CONN_STRING = os.environ["DATABASE_URL"]
 except Exception as e:
     print(f"Error getting variable from the environment: {e}.", file=sys.stderr)
-    exit(1)
+    sys.exit(1)
+
+# Create a connection pool.
+# This is created once when the application starts.
+# minconn=1: Start with one open connection.
+# maxconn=5: Allow up to 5 connections in the pool.
+try:
+    db_pool = pool.SimpleConnectionPool(minconn=1, maxconn=5, dsn=CONN_STRING)
+    print("Database connection pool created successfully.")
+except Exception as e:
+    print(f"Error creating database connection pool: {e}", file=sys.stderr)
+    sys.exit(1)
 
 # Path to the transparent pixel
 PIXEL_PATH = "pixel.png" 
@@ -186,8 +197,8 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
 
     # 3. Save to the database
     try:
-        with psycopg2.connect(CONN_STRING) as conn:
-            print("Connection with database established.")
+        with db_pool.getconn() as conn:
+            print("Connection retrieved from pool.")
 
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -201,7 +212,8 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
         print(f"Error writing to database: {e}", file=sys.stderr)
 
     # 4. Add a background task to purge GitHub image cache *after* returning the image below
-    background_tasks.add_task(purge_github_cache);
+    if "github-camo" in user_agent:
+        background_tasks.add_task(purge_github_cache);
 
     # 5. Return the invisible pixel as a response
     # The media_type tells the browser it's a PNG image.
