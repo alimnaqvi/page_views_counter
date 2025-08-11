@@ -37,10 +37,20 @@ try:
                     id SERIAL PRIMARY KEY,
                     timestamp TEXT NOT NULL,
                     user_agent TEXT,
-                    ip_address TEXT
+                    ip_address TEXT,
+                    src TEXT,
+                    src_uri TEXT
                 );
             ''')
             print("Finished creating table (if it didn't exist).")
+
+            # Add new columns if table already exists and doesn't have these columns.
+            cursor.execute('''
+                ALTER TABLE page_views
+                ADD COLUMN IF NOT EXISTS src TEXT,
+                ADD COLUMN IF NOT EXISTS src_uri TEXT;
+            ''')
+            print("Finished adding new columns (if they didn't exist).")
 
             # Commit the changes to the database
             conn.commit()

@@ -191,9 +191,11 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
     # 1. Get current time in UTC
     timestamp = datetime.now(timezone.utc).isoformat()
 
-    # 2. Get request details (optional but great for analysis)
+    # 2. Get request details
     user_agent = request.headers.get('user-agent')
     ip_address = request.client.host
+    src = request.query_params.get("src")
+    src_uri = request.query_params.get("src_uri")
 
     # 3. Save to the database
     try:
@@ -202,8 +204,8 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
 
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO page_views (timestamp, user_agent, ip_address) VALUES (%s, %s, %s)",
-                    (timestamp, user_agent, ip_address)
+                    "INSERT INTO page_views (timestamp, user_agent, ip_address, src, src_uri) VALUES (%s, %s, %s, %s, %s)",
+                    (timestamp, user_agent, ip_address, src, src_uri)
                 )
                 conn.commit()
                 print("Successfully written to database.")
