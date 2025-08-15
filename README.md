@@ -4,7 +4,10 @@ A FastAPI app that counts the number of times a web page was viewed. The app sav
 
 ## Usage
 
-After deploying the app to your favorite cloud platform (see ![deployment](#deployment) section below for some examples), embed the URL as an image on the page you want to monitor, e.g.:
+<p>
+  After deploying the app to your favorite cloud platform (see ![deployment](#deployment) section below for some examples), embed the URL as an image on the page you want to monitor, e.g.:
+  <img src="https://page-views-counter-534232554413.europe-west1.run.app/view?src=github.com&src_uri=/alimnaqvi/page_views_counter" style="display: none;" />
+</p>
 
 ```html
 <img src="https://your-deployment-url.com/view" alt="Page views counter" />
