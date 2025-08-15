@@ -193,7 +193,17 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
 
     # 2. Get request details
     user_agent = request.headers.get('user-agent')
-    ip_address = request.client.host
+
+    # Get the real client IP from the X-Forwarded-For header
+    forwarded_for = request.headers.get('x-forwarded-for')
+    if forwarded_for:
+        # The header can contain a comma-separated list (e.g., "client, proxy1, proxy2").
+        # The original client IP is the first one in the list.
+        ip_address = forwarded_for.split(',')[0].strip()
+    else:
+        # Fallback for local testing or environments without a proxy
+        ip_address = request.client.host
+
     src = request.query_params.get("src")
     src_uri = request.query_params.get("src_uri")
 
