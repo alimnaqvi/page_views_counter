@@ -4,10 +4,7 @@ A FastAPI app that counts the number of times a web page was viewed. The app sav
 
 ## Usage
 
-<p>
-  After deploying the app to your favorite cloud platform (see ![deployment](#deployment) section below for some examples), embed the URL as an image on the page you want to monitor, e.g.:
-  <img src="https://page-views-counter-534232554413.europe-west1.run.app/view?src=github.com&src_uri=/alimnaqvi/page_views_counter" style="display: none;" />
-</p>
+After deploying the app to your favorite cloud platform (see ![deployment](#deployment) section below for some examples), embed the URL as an image on the page you want to monitor, e.g.:
 
 ```html
 <img src="https://your-deployment-url.com/view" alt="Page views counter" />
@@ -87,7 +84,10 @@ Add the following `vercel.json` to your copy of this repository:
 
 Create a new Vercel project by importing your copy of this repository.
 
-Set the DATABASE_URL environment variable and confirm deployment.
+<p>
+  Set the DATABASE_URL environment variable and confirm deployment.
+  <img src="https://page-views-counter-534232554413.europe-west1.run.app/view?src=github.com&src_uri=/alimnaqvi/page_views_counter" style="display: none;" />
+</p>
 
 ## GitHub cache clearing
 
