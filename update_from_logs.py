@@ -3,7 +3,7 @@
 
 import json
 from pathlib import Path
-from datetime import datetime
+# from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
 import os
@@ -23,6 +23,10 @@ def main():
     if not LOG_JSON_PATH.exists:
         print("JSON log file does not exist:", LOG_JSON_PATH)
         exit(1)
+
+    # counter variables for observability
+    json_item_count = 0
+    added_to_db_count = 0
     
     try:
         # Connect to database
@@ -37,14 +41,13 @@ def main():
                     print("JSON file successfully opened for reading.")
                     # Read the file contents as a json object
                     json_contents = json.load(json_file)
-                    json_item_count = 0
-                    added_to_db_count = 0
+
                     # Loop through items in the json file
                     for json_item in json_contents:
-                        json_item_count += 0
+                        json_item_count += 1
 
                         # Get the timestamp of the request
-                        timestamp = datetime.fromisoformat(json_item["timestamp"].replace('Z', '+00:00'))
+                        timestamp = json_item["timestamp"].replace('Z', '+00:00')
 
                         # Start processing the GET requests
                         requestMethod = json_item["httpRequest"]["requestMethod"]
@@ -56,17 +59,17 @@ def main():
                             # Get query parameters
                             parsed_url = urlparse(json_item["httpRequest"]["requestUrl"])
                             parsed_queries = parse_qs(parsed_url.query)
-                            src = parsed_queries["src"][0]
-                            src_uri = parsed_queries["src_uri"][0]
+                            src = parsed_queries.get("src", [""])[0]
+                            src_uri = parsed_queries.get("src_uri", [""])[0]
 
                             # Update database with new value
                             cursor.execute(
-                                "INSERT INTO page_views (timestamp, user_agent, ip_address, src, src_uri) VALUES (%s, %s, %s, %s, %s)",
+                                "INSERT INTO page_views (timestamp, user_agent, ip_address, src, src_uri) VALUES (%s, %s, %s, %s, %s) ON CONFLICT DO NOTHING",
                                 (timestamp, user_agent, ip_address, src, src_uri)
                             )
                             conn.commit()
 
-                            added_to_db_count += 0
+                            added_to_db_count += 1
 
                         else:
                             print(f"Skipping non-GET request: {requestMethod}")
