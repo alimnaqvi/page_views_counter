@@ -7,3 +7,4 @@ __pycache__
 *.pyc
 views.db
 error_logs.csv
+cloud_run_logs
