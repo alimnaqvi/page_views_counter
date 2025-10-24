@@ -48,7 +48,8 @@ try:
             cursor.execute('''
                 ALTER TABLE page_views
                 ADD COLUMN IF NOT EXISTS src TEXT,
-                ADD COLUMN IF NOT EXISTS src_uri TEXT;
+                ADD COLUMN IF NOT EXISTS src_uri TEXT,
+                ADD COLUMN IF NOT EXISTS referer TEXT;
             ''')
             print("Finished adding new columns (if they didn't exist).")
 

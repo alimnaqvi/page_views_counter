@@ -194,6 +194,9 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
     # 2. Get request details
     user_agent = request.headers.get('user-agent')
 
+    # Get referer
+    referer = request.headers.get('referer')
+
     # Get the real client IP from the X-Forwarded-For header
     forwarded_for = request.headers.get('x-forwarded-for')
     if forwarded_for:
@@ -214,8 +217,8 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
 
             with conn.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO page_views (timestamp, user_agent, ip_address, src, src_uri) VALUES (%s, %s, %s, %s, %s)",
-                    (timestamp, user_agent, ip_address, src, src_uri)
+                    "INSERT INTO page_views (timestamp, user_agent, ip_address, src, src_uri, referer) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (timestamp, user_agent, ip_address, src, src_uri, referer)
                 )
                 conn.commit()
                 print("Successfully written to database.")
