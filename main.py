@@ -195,7 +195,7 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
     user_agent = request.headers.get('user-agent')
 
     # Get referer
-    referer = request.headers.get('referer')
+    # referer = request.headers.get('referer')
 
     # Get the real client IP from the X-Forwarded-For header
     forwarded_for = request.headers.get('x-forwarded-for')
@@ -209,6 +209,7 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
 
     src = request.query_params.get("src")
     src_uri = request.query_params.get("src_uri")
+    referer = request.query_params.get("referer")
 
     # 3. Save to the database
     try:
