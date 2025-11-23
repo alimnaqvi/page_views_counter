@@ -212,8 +212,10 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
     referer = request.query_params.get("referer")
 
     # 3. Save to the database
+    conn = None
     try:
-        with db_pool.getconn() as conn:
+        conn = db_pool.getconn()
+        with conn:
             print("Connection retrieved from pool.")
 
             with conn.cursor() as cursor:
@@ -226,6 +228,10 @@ async def add_view_to_db(request: Request, background_tasks: BackgroundTasks):
 
     except Exception as e:
         print(f"Error writing to database: {e}", file=sys.stderr)
+    finally:
+        if conn:
+            print("Putting connection back in pool.")
+            db_pool.putconn(conn)
 
     # 4. Add a background task to purge GitHub image cache *after* returning the image below
     if "github-camo" in user_agent:
